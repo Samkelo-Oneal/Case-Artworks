@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Portfolio - Case Artworks</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for premium typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+        }
+        h1, h2, h3, .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .gold-text {
+            color: #D4AF37;
+        }
+        .gold-border {
+            border-color: #D4AF37;
+        }
+        .gold-bg {
+            background-color: #D4AF37;
+        }
+        .royal-blue-bg {
+            background-color: #1E3A6F;
+        }
+        .hover-gold:hover {
+            color: #D4AF37;
+            transition: all 0.3s ease;
+        }
+        
+        /* Portfolio Viewer Styles */
+        .portfolio-viewer {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1A1A1A;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .main-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #0A0A0A;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(26, 26, 26, 0.8);
+            border: 2px solid #D4AF37;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-arrow {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        .nav-arrow:hover {
+            background: #D4AF37;
+            color: #0A0A0A;
+        }
+        
+        .nav-arrow.left {
+            left: 20px;
+        }
+        
+        .nav-arrow.right {
+            right: 20px;
+        }
+        
+        .image-counter {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #D4AF37;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            color: white;
+            z-index: 10;
+        }
+        
+        .image-description {
+            padding: 30px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .thumbnail-grid {
+            display: flex;
+            gap: 12px;
+            padding: 20px;
+            overflow-x: auto;
+            background: #0A0A0A;
+            scrollbar-width: thin;
+            scrollbar-color: #D4AF37 #1A1A1A;
+        }
+        
+        .thumbnail-grid::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .thumbnail-grid::-webkit-scrollbar-track {
+            background: #1A1A1A;
+        }
+        
+        .thumbnail-grid::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 10px;
+        }
+        
+        .thumbnail {
+            flex: 0 0 100px;
+            height: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+        
+        @media (max-width: 768px) {
+            .thumbnail {
+                flex: 0 0 80px;
+                height: 56px;
+            }
+        }
+        
+        .thumbnail:hover {
+            opacity: 0.8;
+        }
+        
+        .thumbnail.active {
+            border-color: #D4AF37;
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .client-badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid #D4AF37;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin: 5px;
+            font-weight: 500;
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .floating-menu {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: #1A1A1A;
+            border: 1px solid #D4AF37;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .floating-menu.show {
+            display: block;
+        }
+        
+        .floating-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .floating-item:hover {
+            background: #D4AF37;
+            color: #0A0A0A;
+        }
+        
+        .floating-item i {
+            width: 18px;
+            color: #D4AF37;
+        }
+        
+        .floating-item:hover i {
+            color: #0A0A0A;
+        }
+        
+        .main-floating-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #D4AF37;
+            border: 2px solid #1E3A6F;
+            color: #0A0A0A;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .main-floating-btn:hover {
+            transform: scale(1.1);
+            background: #1E3A6F;
+            color: #D4AF37;
+            border-color: #D4AF37;
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <!-- Floating Contact Button (matching your main site) -->
+    <div class="floating-btn">
+        <div class="floating-menu" id="floatingMenu">
+            <a href="https://wa.me/26879087210?text=Hey!%20Saw%20your%20portfolio%20and%20wanted%20to%20chat..." target="_blank" class="floating-item">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+            <a href="https://www.instagram.com/case_artworks0007" target="_blank" class="floating-item">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+            <a href="https://facebook.com/100093953655945" target="_blank" class="floating-item">
+                <i class="fab fa-facebook-f"></i>
+                <span>Facebook</span>
+            </a>
+            <a href="mailto:samkelooneal0099@gmail.com" class="floating-item">
+                <i class="far fa-envelope"></i>
+                <span>Email</span>
+            </a>
+            <a href="#" onclick="shareSite()" class="floating-item">
+                <i class="fas fa-share-alt"></i>
+                <span>Share</span>
+            </a>
+        </div>
+        <div class="main-floating-btn" onclick="toggleFloatingMenu()">
+            <i class="fas fa-comment"></i>
+        </div>
+    </div>
+
+    <!-- Simple Navigation (minimal to match your site's style) -->
+    <nav class="border-b border-[#D4AF37]/20 bg-[#0A0A0A]/95 backdrop-blur-sm">
+        <div class="container mx-auto px-4 md:px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2 md:gap-3">
+                    <img src="Case Logo.png" alt="Case Artworks Logo" class="h-8 md:h-12 w-auto gold-border border-2 rounded-lg p-1">
+                    <div>
+                        <h1 class="font-serif text-xl md:text-2xl font-bold gold-text">CASE</h1>
+                        <p class="text-[10px] md:text-xs text-gray-400 tracking-widest">ARTWORKS</p>
+                    </div>
+                </div>
+                <a href="index.html" class="hover-gold transition flex items-center gap-2">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Portfolio Section -->
+    <section class="py-12 md:py-16">
+        <div class="container mx-auto px-4 md:px-6">
+            
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <span class="gold-text tracking-widest text-xs md:text-sm">OUR WORK</span>
+                <h2 class="font-serif text-4xl md:text-5xl font-bold mt-2">Full Portfolio</h2>
+                <div class="w-16 md:w-24 h-1 gold-bg mx-auto mt-4"></div>
+            </div>
+            
+            <!-- Client Privacy Note -->
+            <div class="max-w-3xl mx-auto mb-12 p-6 bg-[#1A1A1A] rounded-xl border border-gold/20 text-center">
+                <div class="text-4xl mb-3">🔒</div>
+                <h3 class="font-serif text-2xl font-bold gold-text mb-3">Client Confidentiality</h3>
+                <p class="text-gray-300 mb-4">
+                    Due to client privacy agreements, we can only display a selection of our work. 
+                    Many of our projects remain confidential out of respect for our clients' trust.
+                </p>
+                <div class="border-t border-gold/20 pt-4 mt-2">
+                    <p class="text-sm text-gray-400 mb-3">However, we've had the privilege of working with:</p>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <span class="client-badge text-sm">Galp</span>
+                        <span class="client-badge text-sm">Eswatini Psychology Association</span>
+                        <span class="client-badge text-sm">Enactus</span>
+                        <span class="client-badge text-sm">Smart Newspaper</span>
+                        <span class="client-badge text-sm">Local Music Artists</span>
+                        <span class="client-badge text-sm">Luxury Brands</span>
+                        <span class="client-badge text-sm">Corporate Events</span>
+                        <span class="client-badge text-sm">Wedding Couples</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4">
+                        ...and many more who prefer to stay behind the scenes.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Portfolio Viewer -->
+            <div class="portfolio-viewer" id="portfolioViewer">
+                <!-- Main Image with Arrows -->
+                <div class="main-image-container">
+                    <img id="mainImage" src="images/portfolio-1.jpg" alt="Portfolio Item" class="main-image">
+                    
+                    <!-- Navigation Arrows -->
+                    <div class="nav-arrow left" onclick="prevImage()">
+                        <i class="fas fa-chevron-left text-xl"></i>
+                    </div>
+                    <div class="nav-arrow right" onclick="nextImage()">
+                        <i class="fas fa-chevron-right text-xl"></i>
+                    </div>
+                    
+                    <!-- Image Counter -->
+                    <div class="image-counter" id="imageCounter">
+                        <span id="currentIndex">1</span> / <span id="totalImages">17</span>
+                    </div>
+                </div>
+                
+                <!-- Image Description -->
+                <div class="image-description" id="description">
+                    <h3 class="font-serif text-2xl md:text-3xl font-bold gold-text mb-2" id="projectTitle">Project Title</h3>
+                    <p class="text-gray-300 text-sm md:text-base" id="projectDetails">Project description goes here.</p>
+                </div>
+                
+                <!-- Thumbnail Strip -->
+                <div class="thumbnail-grid" id="thumbnailStrip"></div>
+            </div>
+            
+            <!-- Back to Top Link -->
+            <div class="text-center mt-12">
+                <a href="index.html" class="inline-block border border-gold text-white px-8 py-3 rounded-lg hover-gold-bg transition">
+                    <i class="fas fa-home mr-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ==================== PORTFOLIO DATA ====================
+        // Replace image paths with YOUR actual 17 images
+        const portfolioItems = [
+            {
+                image: "images/Case Magazine.jpg",
+                title: "Cover Page - Case Magazine",
+                description: "Designed a cover page for an online magazine."
+            },
+            {
+                image: "images/Classic Design.png",
+                title: "Engineering Solutions South Africa",
+                description: "Designed a logo for a South African Engineering Company."
+            },
+            {
+                image: "images/White Oud.png",
+                title: "White OUD Ad",
+                description: "Created an Ad for a local perfume brand."
+            },
+            {
+                image: "images/Case Curios.jpg",
+                title: "Case Curios Logo",
+                description: "Logo for an online marketplace business."
+            },
+            {
+                image: "images/Laundry.jpg",
+                title: "Laundry Handwashing Mbabane",
+                description: "Poster For a local handwashing business."
+            },
+            {
+                image: "images/Bianca.jpg",
+                title: "Magazine Article for Bianca Nail Atelier",
+                description: "Magazine Coverage of a local nail business."
+            },
+            {
+                image: "images/Butterfly.png",
+                title: "Client Inspirational Post",
+                description: "Client requested, we provided."
+            },
+            {
+                image: "images/TFH.png",
+                title: "The Food Hut Logo",
+                description: "Entered The Food Hut Logo Competition."
+            },
+            {
+                image: "images/Shak.png",
+                title: "Entered The Shak Logo Competition",
+                description: "A business card for Shak Development Institute Mockup."
+            },
+            {
+                image: "images/Dinner.jpg",
+                title: "Graduate Dinner Celebration Poster",
+                description: "Planned Event."
+            },
+            {
+                image: "images/Kamagra.png",
+                title: "Product Marketing",
+                description: "Website: https://696e967e6599347b4896f12d--astounding-malasada-becc46.netlify.app/ "
+            },
+            {
+                image: "images/Shuttle.jpg",
+                title: "Shuttle Business Car Sticker",
+                description: "Designed a sticker for a transportation business."
+            },
+            {
+                image: "images/Case Files.jpg",
+                title: "Magazine Article",
+                description: "Article For Case Magazine."
+            },
+            {
+                image: "images/FEA.png",
+                title: "Church Event",
+                description: "Christian Church Dinner Event."
+            },
+            {
+                image: "images/Khuze Fresh Farm.png",
+                title: "Khuze Fresh Farm Logo",
+                description: "Logo for a local agriculture business."
+            },
+            {
+                image: "images/Medicare.jpg",
+                title: "MediCare+",
+                description: "Logo for a pharma business."
+            },
+            {
+                image: "images/Paige.png",
+                title: "Artist Album Cover",
+                description: "Joined Competition for Create Album Cover for South African Artist."
+            }
+        ];
+
+        let currentIndex = 0;
+        const totalImages = portfolioItems.length;
+
+        // DOM Elements
+        const mainImage = document.getElementById('mainImage');
+        const projectTitle = document.getElementById('projectTitle');
+        const projectDetails = document.getElementById('projectDetails');
+        const currentIndexSpan = document.getElementById('currentIndex');
+        const totalImagesSpan = document.getElementById('totalImages');
+        const thumbnailStrip = document.getElementById('thumbnailStrip');
+
+        // Initialize
+        function initPortfolio() {
+            totalImagesSpan.textContent = totalImages;
+            updateDisplay();
+            createThumbnails();
+        }
+
+        // Update main display
+        function updateDisplay() {
+            const item = portfolioItems[currentIndex];
+            mainImage.src = item.image;
+            mainImage.alt = item.title;
+            projectTitle.textContent = item.title;
+            projectDetails.textContent = item.description;
+            currentIndexSpan.textContent = currentIndex + 1;
+            
+            // Update active thumbnail
+            document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+                if (index === currentIndex) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+
+        // Create thumbnail strip
+        function createThumbnails() {
+            thumbnailStrip.innerHTML = '';
+            portfolioItems.forEach((item, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = `thumbnail ${index === currentIndex ? 'active' : ''}`;
+                thumb.onclick = () => {
+                    currentIndex = index;
+                    updateDisplay();
+                };
+                
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.alt = item.title;
+                img.onerror = function() {
+                    this.src = 'https://via.placeholder.com/100x70/1A1A1A/D4AF37?text=Case';
+                };
+                
+                thumb.appendChild(img);
+                thumbnailStrip.appendChild(thumb);
+            });
+        }
+
+        // Navigation functions
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % totalImages;
+            updateDisplay();
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+            updateDisplay();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                prevImage();
+            } else if (e.key === 'ArrowRight') {
+                nextImage();
+            }
+        });
+
+        // Floating menu functions
+        function toggleFloatingMenu() {
+            document.getElementById('floatingMenu').classList.toggle('show');
+        }
+
+        // Close floating menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('floatingMenu');
+            const btn = document.querySelector('.main-floating-btn');
+            if (menu && btn && !btn.contains(event.target) && !menu.contains(event.target)) {
+                menu.classList.remove('show');
+            }
+        });
+
+        // Share function
+        function shareSite() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Case Artworks Portfolio',
+                    text: 'Check out the amazing work by Case Artworks',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initPortfolio);
+    </script>
+</body>
+</html>
